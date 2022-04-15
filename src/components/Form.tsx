@@ -44,6 +44,25 @@ type ApiResponse = {
     Type: number
 }
 
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    @media (max-width: 885px) {
+        width: 80%;
+    margin: 0 auto;
+  }
+
+`
+const SelectWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    @media (max-width: 885px) {
+    justify-content: center;
+  }
+`
 
 const SubmitButton = styled.input`
     background-color: #FFF;
@@ -56,7 +75,7 @@ const SubmitButton = styled.input`
     font-size: 20px;
     border-radius: 5px;
     transition: background-color .4s ease;
-    margin-top:30px;
+    margin-top: 20px;
 
     &:hover{
         background-color: #032070;
@@ -126,16 +145,17 @@ const Form = ({setUserSelection}:any):ReactElement => {
     return (
         <>
             {error && <Error>Todos los campos son obligatorios</Error>}
-            <form onSubmit={handleSubmit}>
-                
-                <SelectCurrency/>
-                <SelectCrypto/>
+            <StyledForm onSubmit={handleSubmit}>
+                <SelectWrapper>
+                    <SelectCurrency/>
+                    <SelectCrypto/>
+                </SelectWrapper>
                 <SubmitButton
                     type='submit'
                     value='Cotizar'
                 />
 
-            </form>
+            </StyledForm>
         </>
     )
 }

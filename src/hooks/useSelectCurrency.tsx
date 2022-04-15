@@ -18,12 +18,21 @@ const Select = styled.select`
     padding:14px;
     border-radius: 10px;
 `
+const Wrapper = styled.div`
+    width: 48%;
+    @media (max-width: 885px) {
+        width: 100%;
+
+  }
+    
+    
+`
 
 const useSelectMonedas = (label:string, options:(Array<Currency>|Object[])):(string | (() => ReactJSXElement))[]=>{
     const [selectedOption, setSelectedOption] = useState('');
 
     const SelectMonedas = ():ReactJSXElement=>(
-        <>
+        <Wrapper>
             <Label>{label}</Label>
             <Select value={selectedOption} onChange={(e)=>setSelectedOption(e.target.value)}>
                 <option value=''>Select</option>
@@ -36,7 +45,7 @@ const useSelectMonedas = (label:string, options:(Array<Currency>|Object[])):(str
                     ))}
                 
             </Select>
-        </>
+        </Wrapper>
     )
     
     return [selectedOption, SelectMonedas];

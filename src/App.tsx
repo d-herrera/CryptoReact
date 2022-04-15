@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled from '@emotion/styled';
-import ImagenCrypto from './assets/img/imagen-criptos.png';
+import HeaderImage from './assets/header-img.png';
 import Form from './components/Form'
 import Result from './components/Result'
 import { useEffect } from 'react';
@@ -12,9 +12,9 @@ font-family:'Lato', sans-serif;
 color:#FFF;
 text-align: center;
 font-weight: 700;
-margin-top: 80px;
-margin-bottom: 50px;
-font-size: 34px;
+margin-top: 0px;
+text-transform:uppercase ;
+/* font-size: 34px;
   &::after{
     content:'';
     width: 100px;
@@ -22,24 +22,23 @@ font-size: 34px;
     background-color: #6a73f3;
     display: block;
     margin: 10px auto 0 auto;
-  }
+  } */
 `
 const Container = styled.div`
+  display:flex;
+  flex-direction: column;
   max-width:900px;
   margin:0 auto;
   width:90%;
-  @media (min-width: 992px){
-    display:grid;
-    grid-template-columns:repeat(2, 1fr);
-    column-gap:2rem;
-  }
 `
-
-const Image = styled.img`
-  max-width: 400px;
-  width:80%;
-  margin:100px auto 0 auto;
-  display:block;
+const Header = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 20vh;
+  background-image: url(${HeaderImage});
+  margin-top:0px;
 `
 
 const Loading = styled.p`
@@ -73,19 +72,16 @@ function App():ReactElement {
 
 
   return (
-    <Container>
-      <div>
-        <Image src={ImagenCrypto} alt='imagen criptomonedas' />
-      </div>
-      <div>
+    <>
+      <Header>
         <Heading>Cotiza tus Cryptos al Instante</Heading>
+      </Header>
+      <Container>
         <Form setUserSelection={setUserSelection}/>
         { loading ? <Spinner/> : <Result result={result}/>}
-      </div>
+      </Container>
+    </>
 
-
-
-    </Container>
   )
 }
 
