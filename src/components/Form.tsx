@@ -48,10 +48,9 @@ const StyledForm = styled.form`
     display: flex;
     flex-direction: column;
     width:100%;
+    margin-top: 10px;
     @media (max-width: 885px) {
-        width: 80%;
-    margin: 0 auto;
-  }
+  } 
 
 `
 const SelectWrapper = styled.div`
@@ -59,13 +58,15 @@ const SelectWrapper = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
+    &:nth-child(2){
+        margin-top:40px;
+    }
     @media (max-width: 885px) {
     justify-content: center;
   }
 `
-
 const SubmitButton = styled.input`
-    background-color: #FFF;
+    background-color:#9C79C7;
     border:none;
     width: 100%;
     padding:10px;
@@ -76,9 +77,11 @@ const SubmitButton = styled.input`
     border-radius: 5px;
     transition: background-color .4s ease;
     margin-top: 20px;
+    border: 1px solid #474747;
+    color: #212121;
+}
 
     &:hover{
-        background-color: #032070;
         color:white;
         cursor:pointer;
     }

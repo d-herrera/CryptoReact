@@ -12,7 +12,9 @@ font-family:'Lato', sans-serif;
 color:#FFF;
 text-align: center;
 font-weight: 700;
-margin-top: 0px;
+font-size: 28px;
+    padding: 20px;
+    margin: 0px;
 text-transform:uppercase ;
 /* font-size: 34px;
   &::after{
@@ -39,6 +41,9 @@ const Header = styled.header`
   height: 20vh;
   background-image: url(${HeaderImage});
   margin-top:0px;
+  & > h1{
+    margin:0px;
+  }
 `
 
 const Loading = styled.p`
@@ -73,7 +78,7 @@ function App():ReactElement {
 
   return (
     <>
-      <Header>
+       <Header>
         <Heading>Cotiza tus Cryptos al Instante</Heading>
       </Header>
       <Container>

@@ -14,12 +14,15 @@ const Label = styled.label`
 `
 const Select = styled.select`
     width: 100%;
-    font-size: 18px;
+    font-size: 16px;
     padding:14px;
     border-radius: 10px;
+    background-color:#212121;
+    color: #d8d8d8;
 `
 const Wrapper = styled.div`
     width: 48%;
+    margin-top: 10px;
     @media (max-width: 885px) {
         width: 100%;
 
