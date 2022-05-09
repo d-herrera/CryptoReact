@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import styled from "@emotion/styled";
-import { Currency } from "../types/formTypes";
-import { ReactElement } from "react";
+import { ReturnElemenType } from "../types/apiTypes";
+import { SelectType } from "../types/selectTypes";
 
 const Label = styled.label`
     color:white;
@@ -26,27 +26,41 @@ const Wrapper = styled.div`
     @media (max-width: 885px) {
         width: 100%;
 
-  }
-    
-    
+  }   
 `
+type Option = Array<{
+    id:string
+    name:string
+}> | Promise<ReturnElemenType[]>
 
-const useSelectMonedas = (label:string, options:(Array<Currency>|Object[])):(string | (() => ReactJSXElement))[]=>{
+
+
+const useSelectMonedas = (label:string, options:Option, type:string)=>{
     const [selectedOption, setSelectedOption] = useState('');
+
+console.log('label: ', label, 'options: ', options, 'type: ', type)
+
+    const getValue=(option)=>{
+        if(type === SelectType.CurrencySelect) return option.id
+        if(type === SelectType.CryptoSelect)return option.name
+    }
+
+    const renderOptions=(options)=>{
+        if(options && options.length){
+            return options.map(option=>(
+                <option key={option.id} value={getValue(option)}>
+                    {option.name}
+                </option>
+            ))
+        }
+    }
 
     const SelectMonedas = ():ReactJSXElement=>(
         <Wrapper>
             <Label>{label}</Label>
             <Select value={selectedOption} onChange={(e)=>setSelectedOption(e.target.value)}>
                 <option value=''>Select</option>
-                    {options.map(option=>(
-                        <option key={option.id}
-                        value={option.id}
-                        >
-                            {option.name}
-                        </option>
-                    ))}
-                
+                {renderOptions(options)}
             </Select>
         </Wrapper>
     )

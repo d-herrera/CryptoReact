@@ -5,7 +5,15 @@ import Form from './components/Form'
 import Result from './components/Result'
 import { useEffect } from 'react';
 import { ReactElement } from 'react';
-import Spinner from './components/Spinner';
+import { store } from './redux/store'
+import { Provider } from 'react-redux'
+import { getCryptosInfo } from './api/api';
+import { UserSelectionMainForm } from './types/formTypes';
+import {  getCryptoList } from './redux/mainSlice';
+import { useAppDispatch, useTypedSelector } from './hooks/useRedux';
+import {cryptoSelectItem} from './redux/mainSlice'
+
+
 
 const Heading = styled.h1`
 font-family:'Lato', sans-serif;
@@ -51,30 +59,36 @@ const Loading = styled.p`
   font-family: 'Lato', sans-serif;
   color:white;
 `
+interface SelectOptionList{
+  Data: []
+  HasWarning: false
+  Message: string
+  MetaData: {}
+  RateLimit: {}
+  SponsoredData: []
+  Type: number
+}
+
+
 
 function App():ReactElement {
   
-  const [userSelection, setUserSelection] = useState({selectedCurrency:'', selectedCrypto:''});
+  const [userSelection, setUserSelection] = useState<UserSelectionMainForm>({selectedCurrency:'', selectedCrypto:''});
   const [result, setResult] = useState<Object | undefined>({});
-  const [loading, setLoading] = useState<boolean>(false);
+  const [formCryptoList, setformCryptoList] = useState<cryptoSelectItem[]>()
+  const [isFormSubmited, setIsFormSubmited]=useState<boolean>(false)
+  const SelectedCryptoInformation = getCryptosInfo(userSelection)
+  const isFormCompleted=Object.keys(userSelection.selectedCurrency).length > 1
+  const dispatch = useAppDispatch()
+  const { cryptoList } = useTypedSelector(state=>state.main)
 
   useEffect(()=>{
-    if(Object.keys(userSelection.selectedCurrency).length > 1){
-    const getCryptoData = async ()=>{
-      setLoading(true)
-      const {selectedCurrency,  selectedCrypto} = userSelection
-      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${selectedCrypto}&tsyms=${selectedCurrency}`
+      if(!cryptoList.length){
+        dispatch(getCryptoList())
+      }
+         
       
-      const response = await fetch(url);
-      const result = await response.json()
-      setResult(result.DISPLAY[selectedCrypto][selectedCurrency]); 
-      setLoading(false)
-    }
-    getCryptoData();
-      
-    }
-  },[userSelection])
-
+  },[dispatch])
 
   return (
     <>
@@ -82,12 +96,20 @@ function App():ReactElement {
         <Heading>Cotiza tus Cryptos al Instante</Heading>
       </Header>
       <Container>
-        <Form setUserSelection={setUserSelection}/>
-        { loading ? <Spinner/> : <Result result={result}/>}
+        <Form setUserSelection={setUserSelection} crytoOptionList={cryptoList}/>
+        <Result result={result}/>
       </Container>
     </>
 
   )
 }
 
-export default App
+const AppWrapper = ()=>(
+  <Provider store={store}>
+      <App/>
+  </Provider>
+)
+
+export default AppWrapper
+
+
