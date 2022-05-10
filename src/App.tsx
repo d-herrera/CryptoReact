@@ -1,20 +1,30 @@
 import { useState } from 'react'
 import styled from '@emotion/styled';
-import ImagenCrypto from './assets/img/imagen-criptos.png';
+import HeaderImage from './assets/header-img.png';
 import Form from './components/Form'
 import Result from './components/Result'
 import { useEffect } from 'react';
 import { ReactElement } from 'react';
-import Spinner from './components/Spinner';
+import { store } from './redux/store'
+import { Provider } from 'react-redux'
+import { getCryptosInfo } from './api/api';
+import { UserSelectionMainForm } from './types/formTypes';
+import {  getCryptoList } from './redux/mainSlice';
+import { useAppDispatch, useTypedSelector } from './hooks/useRedux';
+import {cryptoSelectItem} from './redux/mainSlice'
+
+
 
 const Heading = styled.h1`
 font-family:'Lato', sans-serif;
 color:#FFF;
 text-align: center;
 font-weight: 700;
-margin-top: 80px;
-margin-bottom: 50px;
-font-size: 34px;
+font-size: 28px;
+    padding: 20px;
+    margin: 0px;
+text-transform:uppercase ;
+/* font-size: 34px;
   &::after{
     content:'';
     width: 100px;
@@ -22,24 +32,26 @@ font-size: 34px;
     background-color: #6a73f3;
     display: block;
     margin: 10px auto 0 auto;
-  }
+  } */
 `
 const Container = styled.div`
+  display:flex;
+  flex-direction: column;
   max-width:900px;
   margin:0 auto;
   width:90%;
-  @media (min-width: 992px){
-    display:grid;
-    grid-template-columns:repeat(2, 1fr);
-    column-gap:2rem;
-  }
 `
-
-const Image = styled.img`
-  max-width: 400px;
-  width:80%;
-  margin:100px auto 0 auto;
-  display:block;
+const Header = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 20vh;
+  background-image: url(${HeaderImage});
+  margin-top:0px;
+  & > h1{
+    margin:0px;
+  }
 `
 
 const Loading = styled.p`
@@ -47,46 +59,57 @@ const Loading = styled.p`
   font-family: 'Lato', sans-serif;
   color:white;
 `
+interface SelectOptionList{
+  Data: []
+  HasWarning: false
+  Message: string
+  MetaData: {}
+  RateLimit: {}
+  SponsoredData: []
+  Type: number
+}
+
+
 
 function App():ReactElement {
   
-  const [userSelection, setUserSelection] = useState({selectedCurrency:'', selectedCrypto:''});
+  const [userSelection, setUserSelection] = useState<UserSelectionMainForm>({selectedCurrency:'', selectedCrypto:''});
   const [result, setResult] = useState<Object | undefined>({});
-  const [loading, setLoading] = useState<boolean>(false);
+  const [formCryptoList, setformCryptoList] = useState<cryptoSelectItem[]>()
+  const [isFormSubmited, setIsFormSubmited]=useState<boolean>(false)
+  const SelectedCryptoInformation = getCryptosInfo(userSelection)
+  const isFormCompleted=Object.keys(userSelection.selectedCurrency).length > 1
+  const dispatch = useAppDispatch()
+  const { cryptoList } = useTypedSelector(state=>state.main)
 
   useEffect(()=>{
-    if(Object.keys(userSelection.selectedCurrency).length > 1){
-    const getCryptoData = async ()=>{
-      setLoading(true)
-      const {selectedCurrency,  selectedCrypto} = userSelection
-      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${selectedCrypto}&tsyms=${selectedCurrency}`
+      if(!cryptoList.length){
+        dispatch(getCryptoList())
+      }
+         
       
-      const response = await fetch(url);
-      const result = await response.json()
-      setResult(result.DISPLAY[selectedCrypto][selectedCurrency]); 
-      setLoading(false)
-    }
-    getCryptoData();
-      
-    }
-  },[userSelection])
-
+  },[dispatch])
 
   return (
-    <Container>
-      <div>
-        <Image src={ImagenCrypto} alt='imagen criptomonedas' />
-      </div>
-      <div>
+    <>
+       <Header>
         <Heading>Cotiza tus Cryptos al Instante</Heading>
-        <Form setUserSelection={setUserSelection}/>
-        { loading ? <Spinner/> : <Result result={result}/>}
-      </div>
+      </Header>
+      <Container>
+        <Form setUserSelection={setUserSelection} crytoOptionList={cryptoList}/>
+        <Result result={result}/>
+      </Container>
+    </>
 
-
-
-    </Container>
   )
 }
 
-export default App
+const AppWrapper = ()=>(
+  <Provider store={store}>
+      <App/>
+  </Provider>
+)
+
+export default AppWrapper
+
+

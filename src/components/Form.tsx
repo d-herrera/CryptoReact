@@ -6,7 +6,9 @@ import useSelectMonedas from '../hooks/useSelectCurrency';
 import { Currency } from '../types/formTypes';
 import { SyntheticEvent } from 'react';
 import { SetStateAction } from 'react';
-
+import {getCriptoCurrencies} from '../api/api'
+import { ReturnElemenType } from '../types/apiTypes';
+import { SelectType } from '../types/selectTypes';
 /* type Crypto = {
     Algorithm: string
     AssetLaunchDate: string
@@ -44,9 +46,29 @@ type ApiResponse = {
     Type: number
 }
 
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    margin-top: 10px;
+    @media (max-width: 885px) {
+  } 
 
+`
+const SelectWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    &:nth-child(2){
+        margin-top:40px;
+    }
+    @media (max-width: 885px) {
+    justify-content: center;
+  }
+`
 const SubmitButton = styled.input`
-    background-color: #FFF;
+    background-color:#64ff03c2;
     border:none;
     width: 100%;
     padding:10px;
@@ -56,15 +78,20 @@ const SubmitButton = styled.input`
     font-size: 20px;
     border-radius: 5px;
     transition: background-color .4s ease;
-    margin-top:30px;
+    margin-top: 20px;
+    border: 1px solid #474747;
+    color: #ffffff;
+    &:hover{
+        background-color: #64ff03ed;
+        color:#ffffff;
+    }
 
     &:hover{
-        background-color: #032070;
         color:white;
         cursor:pointer;
     }
     
-`    
+`
     const options:Array<Currency>= [
         {
             id:'USD',
@@ -80,30 +107,28 @@ const SubmitButton = styled.input`
         }
     ]
 
-const Form = ({setUserSelection}:any):ReactElement => {
-    const [cryptocurrencies , setcryptocurrencies ] = useState<Object[]>([{}])
+const Form = ({setUserSelection, crytoOptionList}):ReactElement => {
+    const [cryptocurrencies , setcryptocurrencies ] = useState<Promise<ReturnElemenType[]>>()
     const [error, setError] = useState<Boolean>(false)
-    const [selectedCurrency, SelectCurrency] = useSelectMonedas('Elije tu moneda', options);
-    const [selectedCrypto, SelectCrypto] = useSelectMonedas('Elije tu criptomoneda', cryptocurrencies);
-   
+    const [selectedCurrency, SelectCurrency] = useSelectMonedas('Elije tu moneda', options, SelectType.CurrencySelect);
+    const [selectedCrypto, SelectCrypto] = useSelectMonedas('Elije tu criptomoneda', crytoOptionList, SelectType.CryptoSelect);
 
     useEffect(()=>{
-        const fetchApi = async ():Promise<void>=>{
+        console.log('from form: ', crytoOptionList)
+
+
+        
+/*         const fetchApi = async ():Promise<void>=>{
             const url = 'https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=USD'
             const request = await fetch(url);
             const response: ApiResponse = await request.json();
             
-            const cryptoArr = response.Data.map((crypto:any)=>{
-                return{
-                    cryptoFullName: crypto.CoinInfo.FullName,
-                    name: crypto.CoinInfo.Name
-                    };      
-            })
 
-            setcryptocurrencies(cryptoArr);    
+
+            
         }
-        fetchApi()
-    },[])
+        fetchApi() */
+    },[crytoOptionList])
 
     const handleSubmit=(e:SyntheticEvent)=>{
         e.preventDefault();
@@ -126,16 +151,17 @@ const Form = ({setUserSelection}:any):ReactElement => {
     return (
         <>
             {error && <Error>Todos los campos son obligatorios</Error>}
-            <form onSubmit={handleSubmit}>
-                
-                <SelectCurrency/>
-                <SelectCrypto/>
+            <StyledForm onSubmit={handleSubmit} >
+                <SelectWrapper>
+                    <SelectCurrency/>
+                    <SelectCrypto/>
+                </SelectWrapper>
                 <SubmitButton
                     type='submit'
                     value='Cotizar'
                 />
 
-            </form>
+            </StyledForm>
         </>
     )
 }
