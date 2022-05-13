@@ -21,8 +21,7 @@ export const getCryptoList = createAsyncThunk(
   'get/crytoList',
   async ()=> {
     try{
-          const response = await Api.get(`/data/top/totalvolfull?limit=15&tsym=USD`)
-          // console.log('async :', response.data.Data)     
+          const response = await Api.get(`/data/top/totalvolfull?limit=15&tsym=USD`)  
           return response.data.Data as GetCryptoOptionListResponse
         }catch(err){
           console.log(err);
@@ -31,6 +30,22 @@ export const getCryptoList = createAsyncThunk(
           }); */
       }
   })
+
+  export const getCryptoPrice = createAsyncThunk<any,any, AsyncThunkConfig>(
+    'get/crytoPryce',
+    async (userSelection)=> {
+      const {selectedCurrency, selectedCrypto } = userSelection;
+      try{
+            const response = await Api.get(`/data/pricemultifull?fsyms=${selectedCrypto}&tsyms=${selectedCurrency}`);
+            console.log('get crypto prices: ', response)  
+            return response?.DISPLAY[selectedCrypto][selectedCurrency];
+          }catch(err){
+            console.log(err);
+  /*           thunkApi.rejectWithValue({ 
+              message: "Failed to fetch todos." 
+            }); */
+        }
+    })
 
   interface Item {
     fullName: string
@@ -78,6 +93,10 @@ const mainSlice = createSlice({
           state.status = "idle"
         }  
     })
+    builder
+      .addCase(getCryptoPrice.pending, (action, payload)=>{
+
+      })
   },
 })
 

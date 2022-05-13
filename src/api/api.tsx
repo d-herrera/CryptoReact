@@ -48,7 +48,7 @@ export const getCryptosInfo = async (userSelection:UserSelectionMainForm)=>{
  try{
     const {selectedCurrency,  selectedCrypto} = userSelection
     const response: CryptosInfoResponse = await api.get(`/data/pricemultifull?fsyms=${selectedCrypto}&tsyms=${selectedCurrency}`);
-    console.log('caca',response?.DISPLAY[selectedCrypto][selectedCurrency])
+    console.log('api response',response?.DISPLAY[selectedCrypto][selectedCurrency])
     return response?.DISPLAY[selectedCrypto][selectedCurrency];
  }catch(err){
     proccessError(err)

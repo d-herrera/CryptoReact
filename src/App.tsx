@@ -11,7 +11,7 @@ import { getCryptosInfo } from './api/api';
 import { UserSelectionMainForm } from './types/formTypes';
 import {  getCryptoList } from './redux/mainSlice';
 import { useAppDispatch, useTypedSelector } from './hooks/useRedux';
-import {cryptoSelectItem} from './redux/mainSlice'
+import {getCryptoPrice} from './redux/mainSlice'
 
 
 
@@ -86,9 +86,10 @@ function App():ReactElement {
       if(!cryptoList.length){
         dispatch(getCryptoList())
       }
-         
+      getCryptoPrice(userSelection)
+      console.log(userSelection)
       
-  },[dispatch])
+  },[dispatch, userSelection])
 
   return (
     <>

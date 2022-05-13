@@ -138,6 +138,8 @@ const Form = ({setUserSelection, crytoOptionList}):ReactElement => {
             return
         }
         setError(false);
+        console.log('FORM SELECTION: ',                 selectedCurrency,
+        selectedCrypto)
         setUserSelection(
             {
                 selectedCurrency,
