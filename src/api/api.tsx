@@ -33,8 +33,7 @@ type GetCriptoCurrencies = Array<getCriptoCurrenciesPayload>
 
 export const getCriptoCurrencies = async ()=>{
     try{
-        const data =  await api.get(`/data/top/totalvolfull?limit=10&tsym=USD`)    
-        console.log(data)  
+        const data =  await api.get(`/data/top/totalvolfull?limit=10&tsym=USD`)     
         return formatCryptoListSelect(data.data.Data);
     }catch(err){
         proccessError(err)

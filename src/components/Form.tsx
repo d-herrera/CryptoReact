@@ -114,20 +114,6 @@ const Form = ({setUserSelection, crytoOptionList}):ReactElement => {
     const [selectedCrypto, SelectCrypto] = useSelectMonedas('Elije tu criptomoneda', crytoOptionList, SelectType.CryptoSelect);
 
     useEffect(()=>{
-        console.log('from form: ', crytoOptionList)
-
-
-        
-/*         const fetchApi = async ():Promise<void>=>{
-            const url = 'https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=USD'
-            const request = await fetch(url);
-            const response: ApiResponse = await request.json();
-            
-
-
-            
-        }
-        fetchApi() */
     },[crytoOptionList])
 
     const handleSubmit=(e:SyntheticEvent)=>{
@@ -138,8 +124,6 @@ const Form = ({setUserSelection, crytoOptionList}):ReactElement => {
             return
         }
         setError(false);
-        console.log('FORM SELECTION: ',                 selectedCurrency,
-        selectedCrypto)
         setUserSelection(
             {
                 selectedCurrency,

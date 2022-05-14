@@ -20,3 +20,8 @@ export type CryptoItem =
         Display:object
         RAW:object
     }
+
+export type UserSelection {
+    selectedCurrency: string
+    selectedCrypto: string
+}

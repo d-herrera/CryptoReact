@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit'
 import { Api, getCriptoCurrencies } from '../api/api'
+import { UserSelection } from '../types/formTypes'
 
 
 
@@ -25,25 +26,18 @@ export const getCryptoList = createAsyncThunk(
           return response.data.Data as GetCryptoOptionListResponse
         }catch(err){
           console.log(err);
-/*           thunkApi.rejectWithValue({ 
-            message: "Failed to fetch todos." 
-          }); */
       }
   })
 
   export const getCryptoPrice = createAsyncThunk<any,any, AsyncThunkConfig>(
     'get/crytoPryce',
-    async (userSelection)=> {
+    async (userSelection:UserSelection)=> {
       const {selectedCurrency, selectedCrypto } = userSelection;
       try{
             const response = await Api.get(`/data/pricemultifull?fsyms=${selectedCrypto}&tsyms=${selectedCurrency}`);
-            console.log('get crypto prices: ', response)  
-            return response?.DISPLAY[selectedCrypto][selectedCurrency];
+            return response
           }catch(err){
             console.log(err);
-  /*           thunkApi.rejectWithValue({ 
-              message: "Failed to fetch todos." 
-            }); */
         }
     })
 
@@ -57,11 +51,13 @@ export const getCryptoList = createAsyncThunk(
 
   type InitialState = {
     cryptoList:Array<Item>
+    cryptoPrice:Object
     status: string
   }
 
 const initialState = {
   cryptoList:[],
+  cryptoPrice:{},
   status: 'idle',
 } as InitialState;
 
@@ -95,7 +91,7 @@ const mainSlice = createSlice({
     })
     builder
       .addCase(getCryptoPrice.pending, (action, payload)=>{
-
+        
       })
   },
 })

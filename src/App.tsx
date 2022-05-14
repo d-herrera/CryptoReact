@@ -12,7 +12,7 @@ import { UserSelectionMainForm } from './types/formTypes';
 import {  getCryptoList } from './redux/mainSlice';
 import { useAppDispatch, useTypedSelector } from './hooks/useRedux';
 import {getCryptoPrice} from './redux/mainSlice'
-
+import {UserSelection} from './types/formTypes'
 
 
 const Heading = styled.h1`
@@ -73,23 +73,25 @@ interface SelectOptionList{
 
 function App():ReactElement {
   
-  const [userSelection, setUserSelection] = useState<UserSelectionMainForm>({selectedCurrency:'', selectedCrypto:''});
+  const [userSelection, setUserSelection] = useState<UserSelection>({selectedCurrency:'', selectedCrypto:''});
   const [result, setResult] = useState<Object | undefined>({});
-  const [formCryptoList, setformCryptoList] = useState<cryptoSelectItem[]>()
+  const [formCryptoList, setformCryptoList] = useState<[]>()
   const [isFormSubmited, setIsFormSubmited]=useState<boolean>(false)
   const SelectedCryptoInformation = getCryptosInfo(userSelection)
   const isFormCompleted=Object.keys(userSelection.selectedCurrency).length > 1
   const dispatch = useAppDispatch()
   const { cryptoList } = useTypedSelector(state=>state.main)
+  const { cryptoPrice } = useTypedSelector(state=>state.main)
 
   useEffect(()=>{
       if(!cryptoList.length){
         dispatch(getCryptoList())
       }
       getCryptoPrice(userSelection)
-      console.log(userSelection)
+      //setResult(getCryptoPrice(userSelection))
+      console.log('userSelection', )
       
-  },[dispatch, userSelection])
+  },[dispatch, userSelection, getCryptoPrice])
 
   return (
     <>
